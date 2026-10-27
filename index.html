@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DabCons - Construction Site Management</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: #f8fafc; color: #0f172a; min-height: 100vh; display: flex; flex-direction: column; }
+        
+        .bg-lemon { background-color: #84cc16; }
+        .text-lemon { color: #65a30d; }
+        .border-lemon { border-color: #84cc16; }
+        
+        .container { max-width: 1200px; width: 100%; margin: 0 auto; padding: 20px; flex: 1; }
+        .card { background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        
+        header { background-color: #ffffff; border-bottom: 2px solid #e2e8f0; padding: 15px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        
+        /* Horizontal Vibrant Navigation Row */
+        nav { background-color: #ffffff; border-bottom: 2px solid #e2e8f0; padding: 12px 16px; display: flex; gap: 8px; overflow-x: auto; position: sticky; top: 0; z-index: 40; box-shadow: 0 2px 4px rgba(0,0,0,0.03); }
+        nav label { flex: 1; white-space: nowrap; padding: 10px 14px; border-radius: 10px; font-weight: bold; font-size: 13px; color: #ffffff; text-align: center; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        
+        input, select, textarea { background-color: #ffffff; border: 1px solid #cbd5e1; color: #0f172a; padding: 12px; border-radius: 12px; width: 100%; margin-top: 6px; margin-bottom: 16px; outline: none; font-size: 14px; }
+        input:focus, select:focus { border-color: #84cc16; }
+        
+        .btn-lemon { background-color: #84cc16; color: #0f172a; width: 100%; padding: 14px; font-size: 16px; border-radius: 12px; font-weight: bold; border: none; cursor: pointer; text-align: center; display: block; text-decoration: none; }
+        .btn-lemon:hover { opacity: 0.9; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 14px; }
+        th { color: #64748b; font-size: 12px; text-transform: uppercase; }
+        
+        .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+        
+        /* Floating Construction Boy AI Icon */
+        #floatingAI { position: fixed; bottom: 24px; right: 24px; width: 64px; height: 64px; background: #84cc16; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; box-shadow: 0 10px 25px rgba(132, 204, 22, 0.4); cursor: pointer; z-index: 100; transition: transform 0.2s; }
+        #floatingAI:hover { transform: scale(1.08); }
+        
+        .badge-ontime { background: #dcfce7; color: #15803d; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+        .badge-late { background: #fee2e2; color: #b91c1c; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+
+        /* PURE CSS VIEW & TAB CONTROLLER */
+        .page-view, .tab-pane { display: none; }
+        
+        /* Hide radio inputs */
+        input[name="view-switch"], input[name="tab-switch"] { display: none; }
+
+        /* Login to App Switch */
+        #view-app:checked ~ #screen-login { display: none; }
+        #view-app:checked ~ #screen-app { display: flex; flex-direction: column; min-height: 100vh; }
+
+        /* Tab Navigation Routing via CSS */
+        #tab-dash:checked ~ .container #content-dashboard,
+        #tab-att:checked ~ .container #content-attendance,
+        #tab-eqp:checked ~ .container #content-equipment,
+        #tab-sft:checked ~ .container #content-safety,
+        #tab-prg:checked ~ .container #content-progress,
+        #tab-ins:checked ~ .container #content-instructions,
+        #tab-rep:checked ~ .container #content-reports { display: block; }
+    </style>
+</head>
+<body>
+
+    <!-- MASTER STATE SWITCHERS -->
+    <input type="radio" id="view-login" name="view-switch" checked />
+    <input type="radio" id="view-app" name="view-switch" />
+
+    <!-- SCREEN 1: LOGIN PORTAL -->
+    <div id="screen-login" style="display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #f8fafc; padding: 20px; position: fixed; inset: 0; z-index: 9999;">
+        <div class="card" style="max-width: 450px; width: 100%; background: #ffffff;">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <div style="font-size: 48px; margin-bottom: 4px;">🏗️</div>
+                <h1 style="font-size: 26px; font-weight: bold;">Dab<span class="text-lemon">Cons</span></h1>
+                <p style="color: #64748b; font-size: 13px;">Site Tracking & Management Platform</p>
+            </div>
+
+            <div style="background: #f1f5f9; padding: 12px; border-radius: 12px; margin-bottom: 16px; font-size: 13px; color: #334155; line-height: 1.5;">
+                👋 <b>Welcome back, Supervisor!</b> Verify your credentials below to access live site telemetry and worker logs.
+            </div>
+
+            <label style="font-size: 12px; color: #64748b; font-weight: bold;">SUPERVISOR EMAIL</label>
+            <input type="email" id="supEmail" value="henry@dabcons.com" />
+
+            <label style="font-size: 12px; color: #64748b; font-weight: bold;">SPECIAL VERIFICATION CODE</label>
+            <input type="text" id="supCode" value="H5" />
+
+            <label style="font-size: 12px; color: #64748b; font-weight: bold;">PROJECT LOCATION</label>
+            <input type="text" id="projectLoc" value="Tema Community 4" />
+
+            <label style="font-size: 12px; color: #64748b; font-weight: bold;">CONSTRUCTION PHASE</label>
+            <select id="constPhaseLogin">
+                <option value="Building">🏢 Building Construction Mode</option>
+                <option value="Road">🛣️ Road Construction Mode</option>
+            </select>
+
+            <!-- Clicking this label checks #view-app natively and slides right into workspace -->
+            <label for="view-app" onclick="updateWorkspaceMeta()" class="btn-lemon" style="margin-top: 10px; cursor: pointer;">Login & Access Site</label>
+        </div>
+    </div>
+
+    <!-- SCREEN 2: WORKSPACE APP -->
+    <div id="screen-app">
+        
+        <!-- TAB ROUTING RADIOS -->
+        <input type="radio" id="tab-dash" name="tab-switch" checked />
+        <input type="radio" id="tab-att" name="tab-switch" />
+        <input type="radio" id="tab-eqp" name="tab-switch" />
+        <input type="radio" id="tab-sft" name="tab-switch" />
+        <input type="radio" id="tab-prg" name="tab-switch" />
+        <input type="radio" id="tab-ins" name="tab-switch" />
+        <input type="radio" id="tab-rep" name="tab-switch" />
+
+        <!-- FLOATING CONSTRUCTION BOY AI (DELAai) -->
+        <div id="floatingAI" onclick="toggleAIChat()" title="Ask DELAai">👷‍♂️</div>
+
+        <!-- AI CHAT DRAWER -->
+        <div id="aiModal" style="position: fixed; inset: 0; background: rgba(15, 23, 42, 0.75); display: none; justify-content: center; align-items: center; z-index: 50; padding: 20px;">
+            <div class="card" style="max-width: 450px; width: 100%; background: #ffffff;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <h3 style="font-weight: bold; display: flex; align-items: center; gap: 8px;">👷‍♂️ DELAai Site Co-Pilot</h3>
+                    <button onclick="toggleAIChat()" style="background:none; border:none; font-size:18px; cursor:pointer;">✕</button>
+                </div>
+                <div id="aiChatBox" style="background: #f1f5f9; padding: 12px; border-radius: 12px; height: 220px; overflow-y: auto; font-size: 13px; margin-bottom: 12px;">
+                    <p style="margin-bottom:8px;"><b>DELAai:</b> Hello boss! I am connected and ready to manage attendance, safety, or budgets. What needs attention?</p>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" id="aiInput" placeholder="Ask AI or command action..." style="margin:0;" />
+                    <button onclick="sendAIQuery()" class="btn-lemon" style="width: auto; padding: 0 20px;">Send</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOP HEADER -->
+        <header>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 32px;">🏗️</span>
+                <div>
+                    <h2 style="font-size: 20px; font-weight: bold;">Dab<span class="text-lemon">Cons</span></h2>
+                    <p id="headerMode" style="font-size: 12px; color: #64748b;">Building Construction Mode | Code: TE-402</p>
+                </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <span id="supBadge" style="background: #dcfce7; color: #15803d; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: bold;">Supervisor: Henry [H5]</span>
+            </div>
+        </header>
+
+        <!-- HORIZONTAL VIBRANT NAVIGATION ROW -->
+        <nav>
+            <label for="tab-dash" style="background: #84cc16; color: #0f172a;">📊 Dashboard</label>
+            <label for="tab-att" style="background: #0284c7;">👥 Attendance</label>
+            <label for="tab-eqp" style="background: #d97706;">🚜 Equipment</label>
+            <label for="tab-sft" style="background: #dc2626;">🛡️ Safety</label>
+            <label for="tab-prg" style="background: #7c3aed;">📈 Progress</label>
+            <label for="tab-ins" style="background: #0d9488;">✍️ Instructions</label>
+            <label for="tab-rep" style="background: #db2777;">📤 EOW Reports</label>
+        </nav>
+
+        <!-- MAIN CONTENT CONTAINER -->
+        <div class="container">
+
+            <!-- DASHBOARD TAB -->
+            <div id="content-dashboard" class="tab-pane">
+                <div class="card" style="background: linear-gradient(135deg, #f0fdf4, #e0f2fe); border-left: 5px solid #84cc16;">
+                    <h3 id="welcomeTitle" style="font-weight: bold; margin-bottom: 6px;">👋 Welcome back, Supervisor!</h3>
+                    <p style="color: #475569; font-size: 13px;">Your site management portal is fully unlocked and active. Tap any tab above to inspect workers, track machinery, sign instructions, or dispatch EOW reports.</p>
+                </div>
+
+                <div class="grid-4" style="margin-bottom: 20px;">
+                    <div class="card"><p style="font-size:11px; color:#64748b; font-weight:bold;">TOTAL WORKERS</p><h3 style="font-size:26px; margin-top:4px;">5 Active</h3></div>
+                    <div class="card"><p style="font-size:11px; color:#64748b; font-weight:bold;">MACHINERY UNITS</p><h3 style="font-size:26px; margin-top:4px;">3 Units</h3></div>
+                    <div class="card"><p style="font-size:11px; color:#64748b; font-weight:bold;">SAFETY COMPLIANCE</p><h3 style="font-size:26px; margin-top:4px; color:#15803d;">100%</h3></div>
+                    <div class="card"><p style="font-size:11px; color:#64748b; font-weight:bold;">BUDGET VS EXPENSES</p><h3 style="font-size:22px; margin-top:4px; color:#d97706;">GH₵ 14,200 / 20k</h3></div>
+                </div>
+
+                <div class="card">
+                    <h3 style="font-weight: bold; margin-bottom: 12px;">🏗️ Project Overview & Phase: <span id="dashPhaseTitle" class="text-lemon">Building Construction</span></h3>
+                    <p style="color: #64748b; font-size: 14px; line-height: 1.6;">
+                        Active site telemetry running smoothly. All worker payroll metrics, equipment rates, and compliance checks are fully online.
+                    </p>
+                </div>
+            </div>
+
+            <!-- ATTENDANCE & SALARY TAB -->
+            <div id="content-attendance" class="tab-pane">
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap:wrap; gap:10px;">
+                        <h3 style="font-weight: bold;">Workers Registration & Attendance (Standard: 07:30 AM)</h3>
+                        <button onclick="markAttendance()" class="btn-lemon" style="width: auto; padding: 8px 16px; font-size: 13px;">Auto-Mark Today's Attendance</button>
+                    </div>
+                    <table>
+                        <tr><th>Name</th><th>Category & Daily Salary</th><th>Arrival Time</th><th>Status</th></tr>
+                        <tr><td><b>Kofi Mensah</b></td><td>Mason (GH₵ 180 / day)</td><td>07:15 AM</td><td><span class="badge-ontime">On Time</span></td></tr>
+                        <tr><td><b>Yaw Boateng</b></td><td>Steel Bender (GH₵ 200 / day)</td><td>08:10 AM</td><td><span class="badge-late">Late (Highlighted)</span></td></tr>
+                        <tr><td><b>Ama Serwaa</b></td><td>Site Laborer (GH₵ 120 / day)</td><td>07:25 AM</td><td><span class="badge-ontime">On Time</span></td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- EQUIPMENT TAB -->
+            <div id="content-equipment" class="tab-pane">
+                <div class="card">
+                    <h3 style="font-weight: bold; margin-bottom: 12px;">Equipment & Machinery Tracking (Hourly & Daily Rates)</h3>
+                    <table>
+                        <tr><th>Machine / Equipment</th><th>Category</th><th>Hourly Rate</th><th>Daily Rate</th><th>Hours Run Today</th></tr>
+                        <tr><td><b>JCB Excavator</b></td><td>Heavy Earthmoving</td><td>GH₵ 150/hr</td><td>GH₵ 1,200/day</td><td>6 hrs</td></tr>
+                        <tr><td><b>Concrete Mixer</b></td><td>Mixing Unit</td><td>GH₵ 40/hr</td><td>GH₵ 350/day</td><td>4 hrs</td></tr>
+                        <tr><td><b>Tower Crane 01</b></td><td>Lifting Gear</td><td>GH₵ 250/hr</td><td>GH₵ 2,000/day</td><td>8 hrs</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SAFETY SECTION TAB -->
+            <div id="content-safety" class="tab-pane">
+                <div class="card">
+                    <h3 style="font-weight: bold; margin-bottom: 12px;">Site Safety & PPE Status</h3>
+                    <table>
+                        <tr><th>Personnel</th><th>Role</th><th>PPE Status</th><th>Helmet & Boots Verified</th></tr>
+                        <tr><td><b>Kofi Mensah</b></td><td>Mason</td><td><span class="badge-ontime">Safe & Compliant</span></td><td>Yes</td></tr>
+                        <tr><td><b>Yaw Boateng</b></td><td>Steel Bender</td><td><span class="badge-ontime">Safe & Compliant</span></td><td>Yes</td></tr>
+                        <tr><td><b>Ama Serwaa</b></td><td>Laborer</td><td><span class="badge-ontime">Safe & Compliant</span></td><td>Yes</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- PROGRESS & GALLERY TAB -->
+            <div id="content-progress" class="tab-pane">
+                <div class="card" style="max-width: 650px; margin: 0 auto;">
+                    <h3 style="font-weight: bold; margin-bottom: 12px;">Construction Work Progress & Gallery Upload</h3>
+                    <label style="font-size: 12px; color: #64748b; font-weight: bold;">Upload Progress Photo from Gallery</label>
+                    <input type="file" accept="image/*" onchange="uploadProgressPhoto(event)" style="padding: 8px;" />
+                    <div id="progressGallery" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 16px;">
+                        <div style="background:#f1f5f9; height:140px; border-radius:12px; display:flex; align-items:center; justify-content:center; color:#64748b; font-size:12px;">Foundation Casting (Default)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUPERVISOR INSTRUCTIONS & SIGNATURE TAB -->
+            <div id="content-instructions" class="tab-pane">
+                <div class="card" style="max-width: 600px; margin: 0 auto;">
+                    <h3 style="font-weight: bold; margin-bottom: 12px;">Supervisor Instruction Sign-Off Portal</h3>
+                    <label style="font-size: 12px; color: #64748b; font-weight: bold;">Instruction Details</label>
+                    <textarea id="instructionText" rows="3" placeholder="Enter site instruction or order..."></textarea>
+                    
+                    <label style="font-size: 12px; color: #64748b; font-weight: bold;">Supervisor Digital Signature & Code</label>
+                    <input type="text" id="supSignatureDisplay" value="Henry Ametepe (Code: H5)" readonly />
+                    
+                    <button onclick="signInstruction()" class="btn-lemon">Sign Off & Attach Code</button>
+                    <div id="signedLog" style="margin-top: 16px; font-size: 13px; color: #15803d; font-weight: bold;"></div>
+                </div>
+            </div>
+
+            <!-- EOW REPORT AUTO-DISPATCH TAB -->
+            <div id="content-reports" class="tab-pane">
+                <div class="card" style="max-width: 650px; margin: 0 auto;">
+                    <h3 style="font-weight: bold; margin-bottom: 12px;">End of Week (EOW) Financial & Activity Dispatch</h3>
+                    
+                    <label style="font-size: 12px; color: #64748b; font-weight: bold;">Auto-Dispatch Status</label>
+                    <select id="autoDispatchToggle">
+                        <option value="ON">Enabled (Auto-Dispatch Active)</option>
+                        <option value="OFF">Disabled (Turned Off)</option>
+                    </select>
+
+                    <label style="font-size: 12px; color: #64748b; font-weight: bold;">Recipient Email</label>
+                    <input type="email" id="eowEmail" value="management@dabcons.com" />
+
+                    <div style="background: #f1f5f9; padding: 16px; border-radius: 12px; margin-top: 10px; margin-bottom: 16px; font-size: 13px;">
+                        <p><b>Weekly Total Highlights:</b></p>
+                        <p style="margin-top: 6px;">• Workers Weekly Total Salary: <span class="text-lemon">GH₵ 3,500</span></p>
+                        <p style="margin-top: 4px;">• Equipment Weekly Operating Cost: <span class="text-lemon">GH₵ 7,400</span></p>
+                        <p style="margin-top: 4px;">• Include Progress Photos in Report: <b>Yes</b></p>
+                    </div>
+
+                    <button onclick="dispatchEOWReport()" class="btn-lemon">Dispatch EOW Report Now</button>
+                    <p id="eowSuccess" style="color:#15803d; margin-top:12px; text-align:center; font-weight:bold; display:none;">✅ EOW Report successfully sent to email!</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function updateWorkspaceMeta() {
+            const emailInput = document.getElementById('supEmail').value;
+            const codeInput = document.getElementById('supCode').value;
+            const locInput = document.getElementById('projectLoc').value;
+            const phaseInput = document.getElementById('constPhaseLogin').value;
+
+            if(emailInput && codeInput && locInput) {
+                const supName = emailInput.split('@')[0];
+                const supCode = codeInput.toUpperCase();
+                const projCode = locInput.substring(0, 2).toUpperCase() + '-' + Math.floor(100 + Math.random() * 900);
+
+                document.getElementById('headerMode').innerText = phaseInput + ' Construction Mode | Code: ' + projCode;
+                document.getElementById('supBadge').innerTextead>
